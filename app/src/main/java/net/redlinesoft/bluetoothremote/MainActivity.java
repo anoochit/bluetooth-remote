@@ -20,6 +20,7 @@ import app.akexorcist.bluetoothspp.DeviceList;
 public class MainActivity extends ActionBarActivity {
 
     BluetoothSPP bt;
+    Button btnConnect;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,17 @@ public class MainActivity extends ActionBarActivity {
 
         bt = new BluetoothSPP(this);
 
+        btnConnect = (Button)findViewById(R.id.bntConnect);
+        btnConnect.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                    bt.disconnect();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+                }
+            }
+        });
 
         if(!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext()
@@ -47,11 +59,13 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext()
                         , "Connected to " + name + "\n" + address
                         , Toast.LENGTH_SHORT).show();
+                btnConnect.setText(R.string.txt_disconnect);
             }
 
             public void onDeviceDisconnected() {
                 Toast.makeText(getApplicationContext()
                         , "Connection lost", Toast.LENGTH_SHORT).show();
+                btnConnect.setText(R.string.txt_disconnect);
             }
 
             public void onDeviceConnectionFailed() {
@@ -60,17 +74,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        Button btnConnect = (Button)findViewById(R.id.bntConnect);
-        btnConnect.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-                    bt.disconnect();
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-                }
-            }
-        });
+        
 
 
     }
