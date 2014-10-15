@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
             public void onDeviceDisconnected() {
                 Toast.makeText(getApplicationContext()
                         , "Connection lost", Toast.LENGTH_SHORT).show();
-                btnConnect.setText(R.string.txt_disconnect);
+                btnConnect.setText(R.string.txt_connect);
             }
 
             public void onDeviceConnectionFailed() {
